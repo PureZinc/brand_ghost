@@ -36,6 +36,7 @@ def remove_from_cart(request, product):
     return "Product removed!"
 
 
+@transaction.atomic
 def submit_payment(request, cart, total_price):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     token = request.POST.get('stripeToken', None)

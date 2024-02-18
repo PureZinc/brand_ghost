@@ -5,11 +5,24 @@ from django.conf import settings
 from .forms import PaymentForm
 
 
+template = {
+    'home': "e_commerce/home.html",
+    'products': "e_commerce/products.html",
+    'product': "e_commerce/productDetails.html",
+    'cart': "e_commerce/shoppingcart.html",
+    'checkout' : "e_commerce/checkout.html",
+}
+
+
+def home_view(request):
+    return render(request, template['home'])
+
+
 def products_view(request):
     context = {
         "products": Product.objects.all(),
     }
-    return render(request, "e_commerce/products.html", context)
+    return render(request, template['products'], context)
 
 
 def product_view(request, slug):
@@ -18,7 +31,7 @@ def product_view(request, slug):
     context = {
         "product": product
     }
-    return render(request, "e_commerce/productDetails.html", context)
+    return render(request, template['product'], context)
 
 
 def my_shopping_cart(request):
@@ -30,7 +43,7 @@ def my_shopping_cart(request):
         "products": products,
         "price": price
     }
-    return render(request, "e_commerce/shoppingcart.html", context)
+    return render(request, template['cart'], context)
 
 
 def checkout(request):
@@ -49,7 +62,7 @@ def checkout(request):
         "form": form,
         "price": price
     }
-    return render(request, "e_commerce/checkout.html", context)
+    return render(request, template['checkout'], context)
 
 
 def add_to_cart_view(request, slug):

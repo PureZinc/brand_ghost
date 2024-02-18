@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'e_commerce',
 ]
 
@@ -123,5 +124,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STRIPE_PUBLIC_KEY = 'pk_live_51MCFohBLAwOv1xkS878lqRBtyCt67TnCfb5tzvchrFz1qG91gNiPymu8aKelFsm5gkWc4e5i7pBAri44MkkGQ1ai00QtMboUD0'
-STRIPE_SECRET_KEY = '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'
+STRIPE_PUBLIC_KEY = '<your-stripe-public-key>'
+STRIPE_SECRET_KEY = '<your-stripe-secret-key>'

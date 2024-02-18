@@ -1,4 +1,4 @@
-django_apps/django_apps/settings
 django_apps/db.sqlite3
 venv/
+.env
 __pycache__
