@@ -1,0 +1,28 @@
+{% extends 'style1/base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center text-center">
+    {% if products %}
+        <div class="list-group align-center">
+            <div class="row mx-auto">
+                {% for product in products %}
+                    <a href="{% url 'product' product.slug %}" class="card col-md-3 ms-3 mb-3" style="width: 18rem; text-decoration: none; color: inherit;">
+                        <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description }}</p>
+                        <p class="card-text">Stock: {{ product.stock }} | Price: ${{ product.price }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="mt-4">No products available.</p>
+    {% endif %}
+</div>
+<a href="{% url 'cart' %}" class="btn btn-primary mt-3">
+    View Cart
+</a>
+{% endblock %}

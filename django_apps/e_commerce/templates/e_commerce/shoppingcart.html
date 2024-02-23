@@ -20,9 +20,10 @@
           {% for product in products %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ product.name }}</td>
-              <td>${{ product.price }}</td>
-              <td><a href="{% url 'remove_from_cart' product.slug %}" class="btn btn-secondary">Remove from Cart</a></td>
+              <td>{{ product.product.name }}</td>
+              <td>${{ product.product.price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td><a href="{% url 'remove_from_cart' product.product.slug %}" class="btn btn-secondary">Remove from Cart</a></td>
             </tr>
           {% endfor %}
           <tr>
@@ -38,5 +39,14 @@
     {% else %}
       <p>Your cart is empty. Add some products before checking out.</p>
     {% endif %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
   </div>
 {% endblock %}

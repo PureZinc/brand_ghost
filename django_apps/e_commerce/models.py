@@ -9,8 +9,9 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.IntegerField(default=0)
+    stock = models.PositiveIntegerField(default=0)
 
+    image = models.ImageField(null=True, blank=True, upload_to='product_imgs/')
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -25,8 +26,19 @@ class Product(models.Model):
     
     def get_absolute_url(self):
         return reverse('product', kwargs={'slug': self.slug})
+    
+    def __str__(self) -> str:
+        return self.name
 
 
 class ShoppingCart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+
+
+class ShoppingCartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('product', 'cart')
