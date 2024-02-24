@@ -8,7 +8,13 @@ from django.conf import settings
 
 @transaction.atomic
 def add_to_cart(request, product, quantity):
-    cart, created_cart = ShoppingCart.objects.get_or_create(user=request.user)
+    session_key = request.session.session_key
+
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
+    
+    cart = ShoppingCart.get_or_create_cart(session_key=session_key)
     item, created_item = ShoppingCartItem.objects.get_or_create(product=product, cart=cart)
     
     if product.stock < item.quantity + quantity:
@@ -19,19 +25,28 @@ def add_to_cart(request, product, quantity):
     
     item.quantity += quantity
     item.save()
+    cart.save()
     
     messages.success(request, f"Successfully added product! You have {item.quantity} {item.product.name}'s in your cart!")
 
 
 @transaction.atomic
 def remove_from_cart(request, product, quantity):
-    cart = ShoppingCart.objects.get(user=request.user)
+    session_key = request.session.session_key
+
+    if not session_key:
+        messages.error(request, "Session error: Your session doesn't exist. It must've expired. Try again")
+        return None
+    
+    cart = ShoppingCart.get_or_create_cart(session_key=session_key)
     item = ShoppingCartItem.objects.get(product=product, cart=cart)
     
     item.quantity -= quantity
     item.save()
     if item.quantity <= 0:
         item.delete()
+    cart.save()
+
     messages.success(request, f"Successfully removed product! You have {item.quantity} {item.product.name}'s in your cart!")
 
 

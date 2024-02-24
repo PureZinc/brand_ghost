@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
 
@@ -32,7 +31,12 @@ class Product(models.Model):
 
 
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    session = models.CharField(max_length=40, unique=True)
+
+    @classmethod
+    def get_or_create_cart(cls, session_key):
+        cart, created = cls.objects.get_or_create(session=session_key)
+        return cart
 
 
 class ShoppingCartItem(models.Model):

@@ -4,7 +4,7 @@ from .utils import add_to_cart, remove_from_cart, submit_payment
 from django.conf import settings
 from .forms import PaymentForm
 
-design = "e_commerce"  # You can make a design of your own
+design = "e_commerce"  # You can create your own design here!
 
 template = {
     'home': f"{design}/home.html",
@@ -37,7 +37,7 @@ def product_view(request, slug):
 
 
 def my_shopping_cart(request):
-    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+    cart = ShoppingCart.get_or_create_cart(request.session.session_key)
     items = ShoppingCartItem.objects.filter(cart=cart)
     price = sum(item.quantity * item.product.price for item in items)
 
@@ -50,7 +50,7 @@ def my_shopping_cart(request):
 
 def checkout(request):
     form = PaymentForm()
-    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+    cart = ShoppingCart.get_or_create_cart(request.session.session_key)
     items = ShoppingCartItem.objects.filter(cart=cart)
     price = sum(item.quantity * item.product.price for item in items)
 
@@ -67,6 +67,7 @@ def checkout(request):
     return render(request, template['checkout'], context)
 
 
+#  Utility views
 def add_to_cart_view(request, slug):
     product = get_object_or_404(Product, slug=slug)
     add_to_cart(request, product, 1)
