@@ -3,16 +3,10 @@ from .models import Product, ShoppingCart, ShoppingCartItem
 from .utils import add_to_cart, remove_from_cart, submit_payment
 from django.conf import settings
 from .forms import PaymentForm
+from frontend.ecom.designs import choose_template
 
-design = "e_commerce"  # You can create your own design here!
 
-template = {
-    'home': f"{design}/home.html",
-    'products': f"{design}/products.html",
-    'product': f"{design}/productDetails.html",
-    'cart': f"{design}/shoppingcart.html",
-    'checkout' : f"{design}/checkout.html",
-}
+template = choose_template("ecom_style1")
 
 
 def home_view(request):
