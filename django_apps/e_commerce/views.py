@@ -5,12 +5,20 @@ from django.conf import settings
 from .forms import PaymentForm
 from frontend.ecom.designs import choose_template
 
+from django_apps.newsletter.utils.utils import sub_to_newsletter
+from newsletter.forms import SubscribeForm
+
 
 template = choose_template("ecom_style1")
 
 
 def home_view(request):
-    return render(request, template['home'])
+    form = sub_to_newsletter(request, SubscribeForm)
+
+    context = {
+        "form": form
+    }
+    return render(request, template['home'], context)
 
 
 def products_view(request):

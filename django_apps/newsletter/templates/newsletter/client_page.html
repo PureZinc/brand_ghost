@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Sender{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form class="my-form" method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ form.as_p }}
+                {% if form.errors %}
+                    <small class="text-danger">{{ form.errors.0 }}</small>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}
