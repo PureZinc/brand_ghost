@@ -18,7 +18,11 @@ class ProductsView(APIView):
 # Receives product, adds to cart or removes from cart
 class ProductDetailView(APIView):
     def get(self, request, id, quantity):
-        product = Product.objects.get(id=id)
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            raise Http404("Product not found")
+        
         serializer = ProductSer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

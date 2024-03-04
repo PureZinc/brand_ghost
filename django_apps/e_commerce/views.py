@@ -3,7 +3,7 @@ from .models import Product, ShoppingCart, ShoppingCartItem
 from .utils import add_to_cart, remove_from_cart, submit_payment
 from django.conf import settings
 from .forms import PaymentForm
-from frontend.ecom.designs import choose_template
+from .designs import choose_template
 
 from newsletter.utils.utils import sub_to_newsletter
 from newsletter.forms import SubscribeForm

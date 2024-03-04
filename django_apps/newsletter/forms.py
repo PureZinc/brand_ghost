@@ -1,5 +1,6 @@
+from typing import Any
 from django import forms
-from .models import Subscriber
+from .models import Subscriber, Newsletter
 
 
 class SubscribeForm(forms.ModelForm):
@@ -8,7 +9,7 @@ class SubscribeForm(forms.ModelForm):
         fields = ['email']
 
 
-class CreateNewsletterForm(forms.Form):
-    subject = forms.CharField(max_length=150)
-    message = forms.CharField(widget=forms.Textarea)
-    html_message = forms.CharField(widget=forms.Textarea)
+class CreateNewsletterForm(forms.ModelForm):
+    class Meta:
+        model = Newsletter
+        fields = ['subject', 'html_message']
