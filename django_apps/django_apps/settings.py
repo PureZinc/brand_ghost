@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api',
     'e_commerce',
-    'frontend',
+    'newsletter',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,11 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 SESSION_COOKIE_AGE = 1260
 SESSION_COOKIE_SECURE = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Newsletter App downloaded first!
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
