@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <a href="{% url 'add_to_cart' product.slug %}" class="btn btn-primary">
+            <a href="{% url 'add_to_cart' slug=product.slug %}" class="btn btn-primary">
                 Add to Cart
             </a>
             <a href="{% url 'products' %}" class="btn btn-secondary">

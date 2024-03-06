@@ -15,7 +15,7 @@
       <h5>Join our newsletter for more!</h5>
       <form method="post" action="{% url 'home' %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ subscribe_form.as_p }}
         <button type="submit" class="btn btn-primary">Subscribe</button>
       </form>
     </div>

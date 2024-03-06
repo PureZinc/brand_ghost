@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.contrib.sessions.models import Session
 
 # Create your models here.
 
@@ -30,18 +31,9 @@ class Product(models.Model):
         return self.name
 
 
-class ShoppingCart(models.Model):
-    session = models.CharField(max_length=40, unique=True)
-
-    @classmethod
-    def get_or_create_cart(cls, session_key):
-        cart, created = cls.objects.get_or_create(session=session_key)
-        return cart
-
-
 class ShoppingCartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Session, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
 
     class Meta:
