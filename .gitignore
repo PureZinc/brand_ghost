@@ -2,3 +2,4 @@ django_apps/db.sqlite3
 venv/
 .env
 __pycache__
+node_modules

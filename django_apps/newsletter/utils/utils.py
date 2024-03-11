@@ -37,6 +37,7 @@ def save_newsletter(request, form):
 def send_newsletter(subject, html, recipients=list):
         send_mail(
         subject=subject,
+        message="HTML failed to render.",
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=recipients,
         html_message=html,
@@ -48,8 +49,10 @@ def send_newsletter(subject, html, recipients=list):
     error_message= "This form isn't valid. Are you sure you typed in the right email?"
 )
 def sub_to_newsletter(request, form):
+    template = render_to_string('newsletter/welcome_newsletter.html', {})
+
     subject ='Welcome to Our Newsletter!'
-    html = render_to_string('newsletter/welcome_newsletter.html', {})
+    html = render_to_string('newsletter/newsletter_formatter.html', {"details": template})
     email = form.cleaned_data['email']
 
     send_newsletter(subject, html, recipients=[email])

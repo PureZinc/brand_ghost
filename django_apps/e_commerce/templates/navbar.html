@@ -18,6 +18,11 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'checkout' %}">Checkout</a>
           </li>
+          {% if user.is_superuser %}
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary" href="{% url 'newsletters' %}">Back To Dashboard</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

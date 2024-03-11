@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        {% include 'newsletter/style_format.html' %}
+        {{ styles }}
+    </style>
+</head>
+<body>
+    <div class="details">{{ details }}</div>
+
+    <table class="footer" role="presentation" width="100%">
+        <tr>
+            <td align="center">
+                <p>&copy; 2024 Django e-Commerce</p>
+                <a>Unsubscribe</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

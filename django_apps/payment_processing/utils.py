@@ -1,11 +1,12 @@
 import stripe
 from django.conf import settings
 from django.contrib import messages
+from django_apps.utils import get_session
 
 
 def payment_process(func):
     def wrapper(request, total_price, *args, **kwargs):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.api_key = getattr(settings, 'STRIPE_SECRET_KEY', None)
         token = request.POST.get('stripeToken', None)
 
         # Debugging print
@@ -26,7 +27,6 @@ def payment_process(func):
             )
 
             func(request, *args, **kwargs)
-
         except stripe.error.CardError as e:
             messages.error(request, f"Payment failed: {e.error.message}")
 
