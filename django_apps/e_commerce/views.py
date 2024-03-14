@@ -1,14 +1,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .utils import add_to_cart, remove_from_cart
-from .designs import choose_template
+from .utils.cart_functions import add_to_cart, remove_from_cart
 from .models import Product
 from .context_processor import ecom_context
 
-template = choose_template("ecom_style1")
+
+def choose_template(design):
+    return {
+        'products': f"{design}/products.html",
+        'product': f"{design}/productDetails.html",
+        'cart': f"{design}/shoppingcart.html",
+        'checkout' : f"{design}/checkout.html",
+    }
 
 
-def home_view(request):
-    return render(request, template['home'], ecom_context(request))
+template = choose_template("e_commerce")
+
 
 def products_view(request):
     return render(request, template['products'], ecom_context(request))

@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from e_commerce.models import Product, ShoppingCartItem
 from .serializers import ProductSer, ShoppingCartItemSer
-from e_commerce.utils import add_to_cart, remove_from_cart
+
+from e_commerce.models import Product, ShoppingCartItem
+from e_commerce.utils.cart_functions import add_to_cart, remove_from_cart
 
 
 # View all products

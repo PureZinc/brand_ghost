@@ -1,7 +1,6 @@
 import stripe
 from django.conf import settings
 from django.contrib import messages
-from django_apps.utils import get_session
 
 
 def payment_process(func):
