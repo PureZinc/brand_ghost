@@ -1,82 +1,41 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, ShoppingCart, ShoppingCartItem
-from .utils import add_to_cart, remove_from_cart, submit_payment
-from django.conf import settings
-from .forms import PaymentForm
-from .designs import choose_template
-
-from newsletter.utils.utils import sub_to_newsletter
-from newsletter.forms import SubscribeForm
+from .utils.cart_functions import add_to_cart, remove_from_cart
+from .models import Product
+from .context_processor import ecom_context
 
 
-template = choose_template("ecom_style1")
-
-
-def home_view(request):
-    form = sub_to_newsletter(request, SubscribeForm)
-
-    context = {
-        "form": form
+def choose_template(design):
+    return {
+        'products': f"{design}/products.html",
+        'product': f"{design}/productDetails.html",
+        'cart': f"{design}/shoppingcart.html",
+        'checkout' : f"{design}/checkout.html",
     }
-    return render(request, template['home'], context)
+
+
+template = choose_template("e_commerce")
 
 
 def products_view(request):
-
-    context = {
-        "products": Product.objects.all(),
-    }
-    return render(request, template['products'], context)
-
+    return render(request, template['products'], ecom_context(request))
 
 def product_view(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-
-    context = {
-        "product": product
-    }
-    return render(request, template['product'], context)
-
+    return render(request, template['product'], ecom_context(request, slug=slug))
 
 def my_shopping_cart(request):
-    cart = ShoppingCart.get_or_create_cart(request.session.session_key)
-    items = ShoppingCartItem.objects.filter(cart=cart)
-    price = sum(item.quantity * item.product.price for item in items)
-
-    context = {
-        "products": items,
-        "price": price,
-    }
-    return render(request, template['cart'], context)
-
+    return render(request, template['cart'], ecom_context(request))
 
 def checkout(request):
-    form = PaymentForm()
-    cart = ShoppingCart.get_or_create_cart(request.session.session_key)
-    items = ShoppingCartItem.objects.filter(cart=cart)
-    price = sum(item.quantity * item.product.price for item in items)
-
-    if request.method == 'POST':
-        form = PaymentForm(request.POST)
-        if form.is_valid():
-            submit_payment(request, cart, price)
-
-    context = {
-        "public_key": settings.STRIPE_PUBLIC_KEY,
-        "form": form,
-        "price": price
-    }
-    return render(request, template['checkout'], context)
+    return render(request, template['checkout'], ecom_context(request))
 
 
 #  Utility views
-def add_to_cart_view(request, slug):
+def add_to_cart_view(request, slug, quantity=1):
     product = get_object_or_404(Product, slug=slug)
-    add_to_cart(request, product, 1)
+    add_to_cart(request, product, quantity)
     return redirect('product', product.slug)
 
-
-def remove_from_cart_view(request, slug):
+def remove_from_cart_view(request, slug, quantity=1):
     product = get_object_or_404(Product, slug=slug)
-    remove_from_cart(request, product, 1)
+    remove_from_cart(request, product, quantity)
     return redirect('cart')

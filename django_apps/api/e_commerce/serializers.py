@@ -1,5 +1,6 @@
 from rest_framework import serializers as ser
-from e_commerce.models import Product, ShoppingCart, ShoppingCartItem
+from e_commerce.models import Product, ShoppingCartItem
+from  django.contrib.sessions.models import Session
 
 
 class ProductSer(ser.ModelSerializer):
@@ -13,8 +14,8 @@ class ShoppingCartSer(ser.ModelSerializer):
     items = ser.SerializerMethodField()
 
     class Meta:
-        model = ShoppingCart
-        fields = ['id', 'user', 'items', 'total_price']
+        model = Session
+        fields = ['id', 'session_key', 'items', 'total_price']
             
     def get_items(self, obj):
         items = ShoppingCartItem.objects.filter(cart=obj)

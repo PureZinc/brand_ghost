@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Total: ${{ price }}</h1>
+
+  <form action="{% url 'checkout' %}" method="post" id="payment-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="card-element">Card Information</label>
+      <div id="card-element" class="form-control"></div>
+    </div>
+
+    <div id="card-errors" class="alert alert-danger" role="alert">
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Payment</button>
+  </form>
+</div>
+
+<script>
+  var stripePublicKey = "{{ public_key }}";
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'payment.js' %}"></script>
+{% endblock %}      

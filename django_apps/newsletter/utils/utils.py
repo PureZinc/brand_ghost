@@ -1,73 +1,55 @@
-from django.contrib import messages
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from ..models import Subscriber, Newsletter
+from django.contrib import messages
+from ..forms import SubscribeForm
 
 
-def send_email_form(success_message=None, error_message=None):
-
-    def decorator(func):
-        def wrapper(request, my_form, *args, **kwargs):
-
-            if request.method != 'POST':
-                form = my_form()
-            else:
-                form = my_form(request.POST)
-
-                if not form.is_valid():
-                    messages.error(request, error_message)
-
-                else:
-                    func(request, form, *args, **kwargs)
-                    messages.success(request, success_message)
-            return my_form
-        
-        return wrapper
-    return decorator
-
-
-def save_newsletter(request, form):
-    template = form.cleaned_data['html_message']
-    subject = form.cleaned_data['subject']
-
-    Newsletter.objects.create(user=request.user, subject=subject, html_message=template)
-
-
-def send_newsletter(subject, html, recipients=list):
-        send_mail(
+def send_newsletter(subject, message, recipients=[]):
+    send_mail(
         subject=subject,
+        message="HTML failed to render.",
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=recipients,
-        html_message=html,
+        html_message=message,
     )
 
 
-@send_email_form(
-    success_message="Congrats! You're now part of our newsletter!",
-    error_message= "This form isn't valid. Are you sure you typed in the right email?"
-)
-def sub_to_newsletter(request, form):
-    subject ='Welcome to Our Newsletter!'
-    html = render_to_string('newsletter/welcome_newsletter.html', {})
+def save_newsletter(request, form):
+    template = form.cleaned_data['message']
+    subject = form.cleaned_data['subject']
+
+    newsletter = Newsletter.objects.create(user=request.user, subject=subject, message=template)
+    return newsletter
+
+
+def save_and_send_newsletter(request, form):
+    subs = Subscriber.objects.filter(subbed_to=request.user)
+    newsletter = Newsletter.objects.create(user=request.user, subject=subject, html_message=template)
+
+    if not subs.exists:
+        messages.error(request, "You don't have any subs!")
+        return newsletter
+
+    subject = form.cleaned_data['subject']
+    template = form.cleaned_data['message']
+
+    send_newsletter(subject, template, recipients=[sub.email for sub in subs])
+
+    newsletter.recipients.add(*subs)
+    newsletter.save()
+
+
+def sub_to_newsletter(request):
+    form = SubscribeForm(request.POST)
+    name = form.cleaned_data['name']
     email = form.cleaned_data['email']
+    template = render_to_string('newsletter/welcome_newsletter.html', {"name": name})
+
+    subject ='Welcome to Our Newsletter!'
+    html = render_to_string('newsletter/newsletter_formatter.html', {"details": template})
 
     send_newsletter(subject, html, recipients=[email])
 
     form.save()
-
-
-@send_email_form(
-    success_message="Message successfully sent to all subscribers",
-    error_message= "Email couldn't be sent."
-)
-def send_newsletter_to_all(request, form):
-    subs = Subscriber.objects.all()
-
-    template = form.cleaned_data['html_message']
-    subject = form.cleaned_data['subject']
-
-    send_newsletter(subject, template, recipients=[sub.email for sub in subs])
-
-    newsletter_instance = Newsletter.objects.create(user=request.user, subject=subject, html_message=template)
-    newsletter_instance.recipients.add(*subs)

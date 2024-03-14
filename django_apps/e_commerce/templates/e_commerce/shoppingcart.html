@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}My Cart{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Checkout</h2>
+
+    {% if products %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in items %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ product.product.name }}</td>
+              <td>${{ product.product.price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td><a href="{% url 'remove_from_cart' product.product.slug %}" class="btn btn-secondary">Remove from Cart</a></td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="2" class="text-right font-weight-bold">Total:</td>
+            <td class="font-weight-bold">${{ price }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-right mt-4">
+        <a href="{% url 'checkout' %}" class="btn btn-primary">Check Out</a>
+      </div>
+    {% else %}
+      <p>Your cart is empty. Add some products before checking out.</p>
+    {% endif %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+  </div>
+{% endblock %}

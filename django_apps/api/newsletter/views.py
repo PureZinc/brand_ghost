@@ -47,4 +47,9 @@ class SendNewsletterView(APIView):
             send_newsletter(subject, html, recipients=recipients)
         except Exception as e:
             return Response({'error': f"Error removing product from cart: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({'message': "Successfully sent newsletter!"}, status=status.HTTP_200_OK)
+        return Response({'message': "Successfully sent newsletter!"}, status=status.HTTP_200_OK)\
+        
+
+class SubToNewsletterView(APIView):
+    def post(self, request):
+        pass

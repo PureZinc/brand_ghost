@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from e_commerce.models import Product, ShoppingCart, ShoppingCartItem
 from .serializers import ProductSer, ShoppingCartItemSer
-from e_commerce.utils import add_to_cart, remove_from_cart, submit_payment
+
+from e_commerce.models import Product, ShoppingCartItem
+from e_commerce.utils.cart_functions import add_to_cart, remove_from_cart
 
 
 # View all products
@@ -60,7 +61,7 @@ class ProductDetailView(APIView):
 # Views from my cart
 class MyCartView(APIView):
     def get(self, request, *args, **kwargs):
-        cart, created = ShoppingCart.objects.get_or_create(session=request.session.session_key)
+        cart = request.session
         my_items = ShoppingCartItem.objects.filter(cart=cart)
         serializer = ShoppingCartItemSer(my_items, many=True)
         total_price = sum(item.product.price * item.quantity for item in my_items)
