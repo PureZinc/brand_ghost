@@ -1,15 +1,15 @@
-from django.template import Template, Context, loader
+from django.template import Template, loader
 
 
-def create_template(html, context=None):
-    style = loader.render_to_string('newsletter/style_format.html', {})
+def create_template(html, context=None, components=None):
+    style = loader.render_to_string('newsletter/formats/style_format.html', {"components": components})
+    details = loader.render_to_string('newsletter/formats/details_format.html', {"details": html})
     context = context or {}
 
-    html_template = Template(html)
-    style_template = Template(style)
+    formatter = {
+        "details": details,
+        "style": style,
+    }
 
-    rendered_html = html_template.render(Context(context))
-    rendered_style = style_template.render(Context())
-
-    rendered_template = rendered_style + rendered_html
-    return rendered_template
+    rendered_template = loader.render_to_string('newsletter/formats/newsletter_formatter.html', formatter, context=context)
+    return Template(rendered_template)

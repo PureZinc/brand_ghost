@@ -1,0 +1,7 @@
+{% if components  %}
+    {% for component in components %}
+        .{{ component.name }} {
+            color: {{ component.color }};
+        }
+    {% endfor %}
+{% endif %}
