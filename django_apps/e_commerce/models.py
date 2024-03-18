@@ -17,10 +17,8 @@ class Product(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
             base_slug = self.slug
-            counter = 1
-            while Product.objects.filter(slug=base_slug).exists:
-                self.slug = f"{base_slug}-{counter}"
-                counter += 1
+            if Product.objects.filter(slug=base_slug).exists:
+                self.slug = f"{base_slug}-{self.pk}"
         super().save(*args, **kwargs)
     
     def __str__(self) -> str:

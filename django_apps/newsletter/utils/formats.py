@@ -1,4 +1,4 @@
-from django.template import Template, loader
+from django.template import Template, Context, loader
 
 
 def create_template(html, context=None, components=None):
@@ -11,5 +11,5 @@ def create_template(html, context=None, components=None):
         "style": style,
     }
 
-    rendered_template = loader.render_to_string('newsletter/formats/newsletter_formatter.html', formatter, context=context)
-    return Template(rendered_template)
+    rendered_template = loader.render_to_string('newsletter/formats/newsletter_formatter.html', formatter)
+    return Template(rendered_template).render(Context())

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Product{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Create Product</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock  %}

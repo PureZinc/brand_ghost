@@ -26,7 +26,7 @@ def save_newsletter(request, form):
 
 def save_and_send_newsletter(request, form):
     subs = Subscriber.objects.filter(subbed_to=request.user)
-    newsletter = Newsletter.objects.create(user=request.user, subject=subject, html_message=template)
+    newsletter = Newsletter.objects.create(user=request.user, subject=subject, message=template)
 
     if not subs.exists:
         messages.error(request, "You don't have any subs!")

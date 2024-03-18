@@ -14,7 +14,7 @@
                     {% for news in newsletters %}
                         <a href="{% url 'newsletter_details' id=news.id %}" class="list-group-item d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 font-weight-bold">{{ news.subject }}</h5>
-                            <span class="text-muted">Sent: {{ news.sent_date }}</span>
+                            <span class="text-muted">Sent: {% if news.sent_date %}{{ news.sent_date }}{% else %}N/A{% endif %}</span>
                         </a>
                     {% endfor %}
                     </div>

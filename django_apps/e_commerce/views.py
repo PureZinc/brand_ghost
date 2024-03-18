@@ -1,13 +1,17 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
+from django.views import generic
 from .utils.cart_functions import add_to_cart, remove_from_cart
 from .models import Product
-from .context_processor import ecom_context
+from .forms import CreateProductForm
+from main.auth.utils import ClientCheckMixin
+from django.urls import reverse_lazy
 
 
 def choose_template(design):
     return {
         'products': f"{design}/products.html",
         'product': f"{design}/productDetails.html",
+        'create': f"{design}/createProduct.html",
         'cart': f"{design}/shoppingcart.html",
         'checkout' : f"{design}/checkout.html",
     }
@@ -16,17 +20,32 @@ def choose_template(design):
 template = choose_template("e_commerce")
 
 
-def products_view(request):
-    return render(request, template['products'], ecom_context(request))
+class ProductsView(ClientCheckMixin, generic.ListView):
+    model = Product
+    template_name = template["products"]
+    context_object_name =  'products'
 
-def product_view(request, slug):
-    return render(request, template['product'], ecom_context(request, slug=slug))
+    def get_queryset(self):
+        user_products = Product.objects.filter(user=self.request.user)
+        return user_products
 
-def my_shopping_cart(request):
-    return render(request, template['cart'], ecom_context(request))
 
-def checkout(request):
-    return render(request, template['checkout'], ecom_context(request))
+class ProductDetailView(ClientCheckMixin, generic.DetailView):
+    model = Product
+    template_name = template["product"]
+    context_object_name = 'product'
+    slug_field = 'slug'
+
+
+class CreateProductView(ClientCheckMixin, generic.CreateView):
+    model = Product
+    form_class = CreateProductForm
+    template_name = template["create"]
+    success_url = reverse_lazy('products')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 #  Utility views

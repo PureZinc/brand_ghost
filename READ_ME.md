@@ -9,11 +9,11 @@ Build your own brand with Django!
 
 ## Introduction
 
-Django e-Commerce provides you with almost everything you need for you to sell online: Newsletters, an e-Commerce store, and an API to display it all on a welcoming frontend (not included).
+BrandGhost provides you with almost everything you need for you to sell online: Newsletters, an e-Commerce store, and an API to display it all on a welcoming frontend (not included).
 
 This project uses tools like payments with Stripe, Frontend with Bootstrap, and logic with Django.
 
-This project pretty much boils e-commerce down to Frontend only, especially for smaller e-stores. For bigger, more SEO-friendly e-commerce stores, I recommend using the API.
+This project pretty much boils e-commerce down to Frontend only, especially for smaller e-stores. For bigger, more SEO-friendly e-commerce stores, I recommend using more API.
 
 ## Installation
 
