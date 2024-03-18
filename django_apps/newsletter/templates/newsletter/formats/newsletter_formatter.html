@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .details {
+        #details {
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
@@ -29,17 +29,19 @@
             text-decoration: none;
             border-radius: 4px;
         }
-        {{ style|safe }}
+        {{ style }}
     </style>
 </head>
 <body>
-    {{ details|safe }}
-    <table class="footer" role="presentation" width="100%">
-        <tr>
-            <td align="center">
-                <p>&copy; 2024 BrandGhost</p>
-                <a>Unsubscribe</a>
-            </td>
-        </tr>
-    </table>
+    <div id="details">
+        {{ details }}
+        <table class="footer" role="presentation" width="100%">
+            <tr>
+                <td align="center">
+                    <p>&copy; 2024 BrandGhost</p>
+                    <a class="btn">Unsubscribe</a>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>

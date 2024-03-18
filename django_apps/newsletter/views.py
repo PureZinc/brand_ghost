@@ -5,10 +5,7 @@ from .utils.formats import create_template
 from .forms import CreateNewsletterForm
 from .models import Newsletter, Subscriber
 from django.contrib import messages
-
-
-def client_check(user):
-    return user.is_authenticated
+from main.auth.utils import client_check
 
 
 def common_context(request, id=None):
@@ -21,6 +18,23 @@ def common_context(request, id=None):
         context_data["newsletter"] = Newsletter.objects.get(id=id)
 
     return context_data
+
+
+@user_passes_test(client_check, login_url='login')
+def my_newsletters(request):
+    return render(request, 'newsletter/client/my_newsletters.html', common_context(request))
+
+
+@user_passes_test(client_check, login_url='login')
+def newsletter_details(request, id):
+    newsletter = Newsletter.objects.get(id=id)
+    message = create_template(newsletter.message)
+
+    context = {
+        "newsletter": newsletter,
+        "message": message
+    }
+    return render(request, 'newsletter/client/newsletter_details.html', context)
 
 
 @user_passes_test(client_check, login_url='login')
@@ -43,25 +57,7 @@ def newsletter_sender_view(request):
                 save_and_send_newsletter(request, form)
                 messages.success(request, "Message successfully saved and sent to all subscribers")
 
-
     context= {
         "form": form,
     }
     return render(request, 'newsletter/client/create_newsletter.html', context)
-
-
-@user_passes_test(client_check, login_url='login')
-def my_newsletters(request):
-    return render(request, 'newsletter/client/my_newsletters.html', common_context(request))
-
-
-@user_passes_test(client_check, login_url='login')
-def newsletter_details(request, id):
-    newsletter = Newsletter.objects.get(id=id)
-    html = create_template(newsletter.html_message)
-
-    context = {
-        "newsletter": newsletter,
-        "html_message": html
-    }
-    return render(request, 'newsletter/client/newsletter_details.html', context)

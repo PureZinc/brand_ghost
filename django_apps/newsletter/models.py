@@ -14,7 +14,7 @@ class Subscriber(models.Model):
     
 
 class Newsletter(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     subject = models.CharField(max_length=120)
     message = models.TextField(blank=False)
